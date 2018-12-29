@@ -10,5 +10,9 @@ func init() {
 
 // Implement this function, just to silence other compiler errors.
 func openStore() (Store, error) {
+	return openStoreAdvanced(false)
+}
+
+func openStoreAdvanced(systemStore bool) (Store, error) {
 	return nil, errors.New("certstore only works on macOS and Windows")
 }

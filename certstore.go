@@ -17,6 +17,13 @@ func Open() (Store, error) {
 	return openStore()
 }
 
+// OpenAdvanced exists to support windows where the system and user stores
+// are opened differently. 
+func OpenAdvanced(systemStore bool) (Store, error) {
+	return openStoreAdvanced(systemStore)
+}
+
+
 // Store represents the system's certificate store.
 type Store interface {
 	// Identities gets a list of identities from the store.

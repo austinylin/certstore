@@ -38,6 +38,10 @@ type macStore int
 
 // openStore is a function for opening a macStore.
 func openStore() (macStore, error) {
+	return openStoreAdvanced(false)
+}
+
+func openStoreAdvanced(systemStore bool) (macStore, error) {
 	return macStore(0), nil
 }
 

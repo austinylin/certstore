@@ -77,16 +77,28 @@ type winStore struct {
 
 // openStore opens the current user's personal cert store.
 func openStore() (*winStore, error) {
+	return openStoreAdvanced(false)
+}
+
+func openStoreAdvanced(systemStore bool) (*winStore, error) {
 	storeName := unsafe.Pointer(stringToUTF16("MY"))
 	defer C.free(storeName)
 
-	store := C.CertOpenStore(CERT_STORE_PROV_SYSTEM_W, 0, 0, C.CERT_SYSTEM_STORE_CURRENT_USER, storeName)
+	var winStoreToOpen C.DWORD
+	if systemStore {
+		winStoreToOpen = C.CERT_SYSTEM_STORE_LOCAL_MACHINE
+	} else {
+		winStoreToOpen = C.CERT_SYSTEM_STORE_CURRENT_USER
+	}
+
+	store := C.CertOpenStore(CERT_STORE_PROV_SYSTEM_W, 0, 0, winStoreToOpen, storeName)
 	if store == nil {
 		return nil, lastError("failed to open system cert store")
 	}
 
 	return &winStore{store}, nil
 }
+
 
 // Identities implements the Store interface.
 func (s *winStore) Identities() ([]Identity, error) {
